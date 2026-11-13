@@ -1,0 +1,70 @@
+name: edge-predictive-maintenance
+
+services:
+  influxdb:
+    image: influxdb:2
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_ADMIN_USER}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB_ORG}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_BUCKET}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - influxdb-config:/etc/influxdb2
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  simulator:
+    build: ./simulator
+    restart: unless-stopped
+    ports:
+      - "${MODBUS_PORT:-5020}:${MODBUS_PORT:-5020}"
+    environment:
+      MODBUS_PORT: ${MODBUS_PORT:-5020}
+      REPLAY_INTERVAL_S: ${REPLAY_INTERVAL_S:-1}
+      SCENARIO_FILE: /app/scenario.yaml
+      FEATURES_CSV: /data/cwru_features.csv
+      STATE_FILE: /shared/state.json
+      TZ: ${TZ:-UTC}
+    volumes:
+      - ./data/processed:/data:ro
+      - ./shared:/shared
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os, socket; socket.create_connection(('127.0.0.1', int(os.environ['MODBUS_PORT'])), 2).close()"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+  telegraf:
+    image: telegraf
+    restart: unless-stopped
+    depends_on:
+      influxdb:
+        condition: service_healthy
+      simulator:
+        condition: service_healthy
+    environment:
+      INFLUXDB_URL: ${INFLUXDB_URL:-http://influxdb:8086}
+      INFLUXDB_ORG: ${INFLUXDB_ORG}
+      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET}
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN}
+      MODBUS_HOST: ${MODBUS_HOST:-simulator}
+      MODBUS_PORT: ${MODBUS_PORT:-5020}
+      POLL_INTERVAL: ${POLL_INTERVAL:-1s}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+
+volumes:
+  influxdb-data:
+  influxdb-config:

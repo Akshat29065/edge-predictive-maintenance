@@ -1,0 +1,14 @@
+# Replays windows of data/processed/cwru_features.csv, one window per tick.
+# "file" must be a file name from that table. If duration_s is longer than a
+# file has windows, its windows repeat from the start.
+# Load-3 files are used so the demo replays data the load-0 classifier never saw.
+loop: true
+steps:
+  - {file: Normal_3,   duration_s: 60}   # healthy
+  - {file: IR007_3,    duration_s: 45}   # inner race fault, 0.007 inch
+  - {file: IR014_3,    duration_s: 45}   # inner race fault, 0.014 inch
+  - {file: IR021_3,    duration_s: 45}   # inner race fault, 0.021 inch
+  - {file: Normal_3,   duration_s: 30}   # healthy again
+  - {file: OR014at6_3, duration_s: 45}   # outer race fault, 0.014 inch
+  - {file: B021_3,     duration_s: 45}   # ball fault, 0.021 inch
+  - {file: Normal_3,   duration_s: 30}   # healthy again
