@@ -75,7 +75,8 @@ from(bucket: "{bucket}") |> range(start: -{smooth * 3 + 10}s)
         write = client.write_api(write_options=SYNCHRONOUS)
         while True:
             try:
-                recs = [r for t in client.query_api().query(query) for r in t.records]
+                recs = [r for t in client.query_api().query(query) for r in t.records
+                        if all(r.values.get(f) is not None for f in FEATURES)]   # skip rows missing a field
                 if len(recs) >= 3 and recs[-1].get_time() != last_time:
                     last_time = recs[-1].get_time()
                     result = analyzer.analyze([{f: r.values[f] for f in FEATURES} for r in recs])

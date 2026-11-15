@@ -68,3 +68,24 @@ else:
         print(f"  {r.get_time():%H:%M:%S}  {v.get('condition'):7s} conf={v.get('confidence'):.2f} "
               f"size={v.get('severity_mil'):.0f} mil  anomaly={v.get('anomaly_score'):.2f}  urgency={v.get('urgency')}")
     print("  action:", preds[0].values.get("action"))
+
+# --- Phase 3: latest vision inspections -----------------------------------------------
+VIS = f'''
+from(bucket: "{BUCKET}")
+  |> range(start: -60s)
+  |> filter(fn: (r) => r._measurement == "vision_inspection")
+  |> filter(fn: (r) => r._field == "label" or r._field == "p_faulty" or r._field == "image")
+  |> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")
+  |> sort(columns: ["_time"], desc: true)
+  |> limit(n: 5)
+'''
+with InfluxDBClient(url=URL, token=TOKEN, org=ORG) as client:
+    vis = [r for table in client.query_api().query(VIS) for r in table.records]
+print()
+if not vis:
+    print("No vision results yet. Check: docker compose logs vision (did you run python vision/train.py?)")
+else:
+    print("Latest vision inspections (newest first):")
+    for r in vis:
+        v = r.values
+        print(f"  {r.get_time():%H:%M:%S}  {v.get('label'):8s} p_faulty={v.get('p_faulty'):.3f}  frame={v.get('image')}")

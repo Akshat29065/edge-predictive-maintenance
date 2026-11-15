@@ -1,0 +1,1 @@
+{"labels": ["healthy", "faulty"], "size": 224, "mask_top": 0.15, "input": "float32 0..1 NCHW RGB"}

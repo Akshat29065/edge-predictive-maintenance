@@ -85,6 +85,29 @@ services:
     volumes:
       - ./analytics/models:/models:ro
 
+  vision:
+    build: ./vision
+    restart: unless-stopped
+    depends_on:
+      influxdb:
+        condition: service_healthy
+      simulator:
+        condition: service_healthy
+    environment:
+      INFLUXDB_URL: ${INFLUXDB_URL:-http://influxdb:8086}
+      INFLUXDB_ORG: ${INFLUXDB_ORG}
+      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET}
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN}
+      VISION_INTERVAL_S: ${VISION_INTERVAL_S:-5}
+      MODELS_DIR: /models
+      DEMO_DIR: /demo
+      STATE_FILE: /shared/state.json
+      TZ: ${TZ:-UTC}
+    volumes:
+      - ./vision/models:/models:ro
+      - ./vision/demo_images:/demo:ro
+      - ./shared:/shared:ro
+
 volumes:
   influxdb-data:
   influxdb-config:
