@@ -1,0 +1,1 @@
+{"features": ["rms", "peak", "p2p", "crest", "kurtosis", "skew", "shape", "centroid"], "fault_classes": ["normal", "inner", "ball", "outer"], "severities_mil": [7, 14, 21]}

@@ -44,3 +44,27 @@ if state_path.exists():
     s = json.loads(state_path.read_text())
     print(f"\nSimulator is currently replaying: {s['file']} (class={s['cls']}, "
           f"fault size={s['size_mil']} mil, healthy={s['healthy']})")
+
+# --- Phase 2: latest analytics output -------------------------------------------------
+PRED = f'''
+from(bucket: "{BUCKET}")
+  |> range(start: -30s)
+  |> filter(fn: (r) => r._measurement == "predictions")
+  |> filter(fn: (r) => r._field == "condition" or r._field == "confidence" or r._field == "severity_mil"
+                    or r._field == "anomaly_score" or r._field == "urgency" or r._field == "action")
+  |> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")
+  |> sort(columns: ["_time"], desc: true)
+  |> limit(n: 5)
+'''
+with InfluxDBClient(url=URL, token=TOKEN, org=ORG) as client:
+    preds = [r for table in client.query_api().query(PRED) for r in table.records]
+print()
+if not preds:
+    print("No predictions yet. Check: docker compose logs analytics (did you run python analytics/train.py?)")
+else:
+    print("Latest predictions (newest first):")
+    for r in preds:
+        v = r.values
+        print(f"  {r.get_time():%H:%M:%S}  {v.get('condition'):7s} conf={v.get('confidence'):.2f} "
+              f"size={v.get('severity_mil'):.0f} mil  anomaly={v.get('anomaly_score'):.2f}  urgency={v.get('urgency')}")
+    print("  action:", preds[0].values.get("action"))

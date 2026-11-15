@@ -65,6 +65,26 @@ services:
     volumes:
       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
 
+  analytics:
+    build: ./analytics
+    restart: unless-stopped
+    depends_on:
+      influxdb:
+        condition: service_healthy
+      telegraf:
+        condition: service_started
+    environment:
+      INFLUXDB_URL: ${INFLUXDB_URL:-http://influxdb:8086}
+      INFLUXDB_ORG: ${INFLUXDB_ORG}
+      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET}
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN}
+      ANALYTICS_INTERVAL_S: ${ANALYTICS_INTERVAL_S:-2}
+      SMOOTH_WINDOWS: ${SMOOTH_WINDOWS:-10}
+      MODELS_DIR: /models
+      TZ: ${TZ:-UTC}
+    volumes:
+      - ./analytics/models:/models:ro
+
 volumes:
   influxdb-data:
   influxdb-config:
