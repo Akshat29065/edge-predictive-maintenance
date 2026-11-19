@@ -89,3 +89,31 @@ else:
     for r in vis:
         v = r.values
         print(f"  {r.get_time():%H:%M:%S}  {v.get('label'):8s} p_faulty={v.get('p_faulty'):.3f}  frame={v.get('image')}")
+
+# --- Phase 4: agent decisions and alert log -------------------------------------------
+AG = f'''
+from(bucket: "{BUCKET}")
+  |> range(start: -10m)
+  |> filter(fn: (r) => r._measurement == "agent_decisions")
+  |> filter(fn: (r) => r._field == "agreement" or r._field == "mode" or r._field == "tools" or r._field == "latency_s")
+  |> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")
+  |> sort(columns: ["_time"], desc: true)
+  |> limit(n: 5)
+'''
+with InfluxDBClient(url=URL, token=TOKEN, org=ORG) as client:
+    dec = [r for table in client.query_api().query(AG) for r in table.records]
+print()
+if not dec:
+    print("No agent decisions in the last 10 min. Check: docker compose logs agent")
+else:
+    print("Latest agent decisions (newest first):")
+    for r in dec:
+        v = r.values
+        print(f"  {r.get_time():%H:%M:%S}  {v.get('agreement'):16s} mode={v.get('mode'):20s} "
+              f"{v.get('latency_s'):.1f}s  tools={v.get('tools')}")
+for name in ("alerts.log", "tickets.log"):
+    path = Path("logs") / name
+    if path.exists():
+        print(f"\nlast lines of logs/{name}:")
+        for line in path.read_text().splitlines()[-3:]:
+            print("  ", line)
