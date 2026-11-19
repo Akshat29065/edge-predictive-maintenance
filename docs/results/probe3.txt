@@ -1,0 +1,16 @@
+
+=== qwen3:4b (mode=json)
+  [healthy] first answer: [('no_action', {'reason': 'agreement healthy'})]
+  [healthy] valid tool calls 3/3, text grounded 3/3, avg 1.6s
+  [fault] first answer: [('send_alert', {'severity': 'critical', 'message': 'Critical alert: Motor1 has confirmed inner-race defect with high urgency. Immediate bearing replacement required.'}), ('create_maintenance_ticket', {'priority': 'high', 'action': 'Inner-race defect. Plan bearing replacement; check shaft alignment and lubrication.', 'within': 'immediately'})]
+  [fault] valid tool calls 3/3, text grounded 3/3, avg 4.2s
+  [conflict] first answer: [('send_alert', {'severity': 'warning', 'message': 'Sensors conflict: vibration shows inner race fault (7 mil), vision says healthy. Manual inspection needed.'}), ('create_maintenance_ticket', {'priority': 'low', 'action': 'Inner-race defect. Plan bearing replacement.', 'within': 'within 2 weeks'})]
+  [conflict] valid tool calls 3/3, text grounded 3/3, avg 4.1s
+
+=== qwen3:0.6b (mode=json)
+  [healthy] first answer: [('no_action', {'reason': 'healthy agreement'})]
+  [healthy] valid tool calls 3/3, text grounded 3/3, avg 0.8s
+  [fault] first answer: [('send_alert', {'severity': 'critical', 'message': 'Critical: Inner-race defect. Plan bearing replacement; check shaft alignment and lubrication. Estimated fault size 14 mil. Urgency: high. Recommendation: Plan bearing replacement. Time window: at the next stop / immediately.'})]
+  [fault] valid tool calls 3/3, text grounded 3/3, avg 0.9s
+  [conflict] first answer: [('send_alert', {'severity': 'warning', 'message': 'Warning: Sensor disagreement. The analytics suggests a defect, but the vision confirms no faulty parts. No action required.'}), ('no_action', {'reason': 'agreement stale'})]
+  [conflict] valid tool calls 3/3, text grounded 3/3, avg 0.7s

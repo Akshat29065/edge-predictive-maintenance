@@ -1,0 +1,49 @@
+488 images; pretrained=True, mask_top=0.15, epochs=8, device=cpu
+
+Hold out load 'no': train on 322, test on 166
+    epoch 1/8 loss 0.6253
+    epoch 2/8 loss 0.2329
+    epoch 3/8 loss 0.0434
+    epoch 4/8 loss 0.0163
+    epoch 5/8 loss 0.0089
+    epoch 6/8 loss 0.0073
+    epoch 7/8 loss 0.0056
+    epoch 8/8 loss 0.0184
+  -> {'n': 166, 'accuracy': 1.0, 'healthy_recall': 1.0, 'faulty_recall': 1.0, 'confusion[true healthy,true faulty][pred healthy,pred faulty]': [[90, 0], [0, 76]]}
+
+Hold out load 'medium': train on 327, test on 161
+    epoch 1/8 loss 0.6423
+    epoch 2/8 loss 0.2298
+    epoch 3/8 loss 0.0193
+    epoch 4/8 loss 0.0045
+    epoch 5/8 loss 0.0018
+    epoch 6/8 loss 0.0014
+    epoch 7/8 loss 0.0011
+    epoch 8/8 loss 0.0010
+  -> {'n': 161, 'accuracy': 1.0, 'healthy_recall': 1.0, 'faulty_recall': 1.0, 'confusion[true healthy,true faulty][pred healthy,pred faulty]': [[82, 0], [0, 79]]}
+
+Hold out load 'full': train on 327, test on 161
+    epoch 1/8 loss 0.6619
+    epoch 2/8 loss 0.2591
+    epoch 3/8 loss 0.0229
+    epoch 4/8 loss 0.0031
+    epoch 5/8 loss 0.0022
+    epoch 6/8 loss 0.0028
+    epoch 7/8 loss 0.0020
+    epoch 8/8 loss 0.0014
+  -> {'n': 161, 'accuracy': 1.0, 'healthy_recall': 1.0, 'faulty_recall': 1.0, 'confusion[true healthy,true faulty][pred healthy,pred faulty]': [[112, 0], [0, 49]]}
+
+Pooled held-out: {'n': 488, 'accuracy': 1.0, 'healthy_recall': 1.0, 'faulty_recall': 1.0, 'confusion[true healthy,true faulty][pred healthy,pred faulty]': [[284, 0], [0, 204]]}
+
+Final model on all images
+    epoch 1/8 loss 0.6139
+    epoch 2/8 loss 0.1553
+    epoch 3/8 loss 0.0078
+    epoch 4/8 loss 0.0021
+    epoch 5/8 loss 0.0027
+    epoch 6/8 loss 0.0013
+    epoch 7/8 loss 0.0010
+    epoch 8/8 loss 0.0014
+ONNX vs torch max difference: 1.33e-08
+wrote 60 demo images to vision/demo_images
+saved vision/models/thermal.onnx

@@ -1,0 +1,50 @@
+488 images; pretrained=True, epochs=8, device=cpu
+
+Hold out load 'no': train on 322, test on 166
+Downloading: "https://download.pytorch.org/models/mobilenet_v3_small-047dcff4.pth" to /Users/akshatagarwal/.cache/torch/hub/checkpoints/mobilenet_v3_small-047dcff4.pth
+    epoch 1/8 loss 0.6355
+    epoch 2/8 loss 0.2411
+    epoch 3/8 loss 0.0450
+    epoch 4/8 loss 0.0172
+    epoch 5/8 loss 0.0085
+    epoch 6/8 loss 0.0080
+    epoch 7/8 loss 0.0072
+    epoch 8/8 loss 0.0186
+  -> {'n': 166, 'accuracy': 0.994, 'healthy_recall': 0.989, 'faulty_recall': 1.0, 'confusion[true healthy,true faulty][pred healthy,pred faulty]': [[89, 1], [0, 76]]}
+
+Hold out load 'medium': train on 327, test on 161
+    epoch 1/8 loss 0.6428
+    epoch 2/8 loss 0.2390
+    epoch 3/8 loss 0.0200
+    epoch 4/8 loss 0.0047
+    epoch 5/8 loss 0.0019
+    epoch 6/8 loss 0.0016
+    epoch 7/8 loss 0.0009
+    epoch 8/8 loss 0.0009
+  -> {'n': 161, 'accuracy': 1.0, 'healthy_recall': 1.0, 'faulty_recall': 1.0, 'confusion[true healthy,true faulty][pred healthy,pred faulty]': [[82, 0], [0, 79]]}
+
+Hold out load 'full': train on 327, test on 161
+    epoch 1/8 loss 0.6487
+    epoch 2/8 loss 0.2563
+    epoch 3/8 loss 0.0236
+    epoch 4/8 loss 0.0029
+    epoch 5/8 loss 0.0023
+    epoch 6/8 loss 0.0028
+    epoch 7/8 loss 0.0020
+    epoch 8/8 loss 0.0013
+  -> {'n': 161, 'accuracy': 1.0, 'healthy_recall': 1.0, 'faulty_recall': 1.0, 'confusion[true healthy,true faulty][pred healthy,pred faulty]': [[112, 0], [0, 49]]}
+
+Pooled held-out: {'n': 488, 'accuracy': 0.998, 'healthy_recall': 0.996, 'faulty_recall': 1.0, 'confusion[true healthy,true faulty][pred healthy,pred faulty]': [[283, 1], [0, 204]]}
+
+Final model on all images
+    epoch 1/8 loss 0.6144
+    epoch 2/8 loss 0.1569
+    epoch 3/8 loss 0.0073
+    epoch 4/8 loss 0.0019
+    epoch 5/8 loss 0.0028
+    epoch 6/8 loss 0.0014
+    epoch 7/8 loss 0.0009
+    epoch 8/8 loss 0.0010
+ONNX vs torch max difference: 1.86e-09
+wrote 60 demo images to vision/demo_images
+saved vision/models/thermal.onnx

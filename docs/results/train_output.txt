@@ -1,0 +1,13 @@
+{
+ "threshold": 2.89,
+ "false_alarm_rate_on_held_out_normal": 0.148,
+ "detection_rate_by_class": {
+  "inner": 1.0,
+  "ball": 1.0,
+  "outer": 1.0
+ },
+ "note": "baseline from one load alone gives ~100 % false alarms at the other load"
+}
+train 0 hp -> test 3 hp fault_f1_smoothed 0.962 severity_f1 0.973 {'normal_recall': 1.0, 'fault_recall': 1.0}
+train 3 hp -> test 0 hp fault_f1_smoothed 0.999 severity_f1 0.868 {'normal_recall': 1.0, 'fault_recall': 1.0}
+saved models to analytics/models
