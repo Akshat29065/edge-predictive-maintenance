@@ -8,11 +8,11 @@ services:
       - "8086:8086"
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
-      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_ADMIN_USER}
-      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD}
-      DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB_ORG}
-      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_BUCKET}
-      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN}
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_ADMIN_USER:-admin}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD:-change-me-please}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB_ORG:-edge-lab}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_BUCKET:-machine}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN:-dev-token-change-me}
       TZ: ${TZ:-UTC}
     volumes:
       - influxdb-data:/var/lib/influxdb2
@@ -55,9 +55,9 @@ services:
         condition: service_healthy
     environment:
       INFLUXDB_URL: ${INFLUXDB_URL:-http://influxdb:8086}
-      INFLUXDB_ORG: ${INFLUXDB_ORG}
-      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET}
-      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN}
+      INFLUXDB_ORG: ${INFLUXDB_ORG:-edge-lab}
+      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET:-machine}
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN:-dev-token-change-me}
       MODBUS_HOST: ${MODBUS_HOST:-simulator}
       MODBUS_PORT: ${MODBUS_PORT:-5020}
       POLL_INTERVAL: ${POLL_INTERVAL:-1s}
@@ -75,9 +75,9 @@ services:
         condition: service_started
     environment:
       INFLUXDB_URL: ${INFLUXDB_URL:-http://influxdb:8086}
-      INFLUXDB_ORG: ${INFLUXDB_ORG}
-      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET}
-      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN}
+      INFLUXDB_ORG: ${INFLUXDB_ORG:-edge-lab}
+      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET:-machine}
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN:-dev-token-change-me}
       ANALYTICS_INTERVAL_S: ${ANALYTICS_INTERVAL_S:-2}
       SMOOTH_WINDOWS: ${SMOOTH_WINDOWS:-10}
       MODELS_DIR: /models
@@ -95,9 +95,9 @@ services:
         condition: service_healthy
     environment:
       INFLUXDB_URL: ${INFLUXDB_URL:-http://influxdb:8086}
-      INFLUXDB_ORG: ${INFLUXDB_ORG}
-      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET}
-      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN}
+      INFLUXDB_ORG: ${INFLUXDB_ORG:-edge-lab}
+      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET:-machine}
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN:-dev-token-change-me}
       VISION_INTERVAL_S: ${VISION_INTERVAL_S:-5}
       MODELS_DIR: /models
       DEMO_DIR: /demo
@@ -143,9 +143,9 @@ services:
         condition: service_started   # not "healthy": the stack must work (rule fallback) while models download
     environment:
       INFLUXDB_URL: ${INFLUXDB_URL:-http://influxdb:8086}
-      INFLUXDB_ORG: ${INFLUXDB_ORG}
-      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET}
-      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN}
+      INFLUXDB_ORG: ${INFLUXDB_ORG:-edge-lab}
+      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET:-machine}
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN:-dev-token-change-me}
       OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
       LLM_MODEL: ${LLM_MODEL:-qwen3:4b}
       LLM_FALLBACK_MODEL: ${LLM_FALLBACK_MODEL:-qwen3:0.6b}

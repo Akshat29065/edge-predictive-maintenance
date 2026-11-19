@@ -6,7 +6,7 @@ lightgbm
 joblib
 pyyaml
 python-dotenv
-pymodbus
+pymodbus==3.9.2
 influxdb-client
 requests
 pillow
@@ -15,4 +15,7 @@ torchvision
 onnx
 onnxruntime
 matplotlib
-pytest
+pytesttorch
+torchvision
+onnx
+onnxruntime
