@@ -1,0 +1,210 @@
+PASS committed: data/processed/cwru_features.csv
+PASS committed: analytics/models/fault_model.txt
+PASS committed: vision/models/thermal.onnx
+PASS committed: vision/demo_images/index.csv
+starting test stack (no .env, defaults only) ...
+ Image cleanclone-analytics Building 
+ Image cleanclone-vision Building 
+ Image cleanclone-agent Building 
+ Image cleanclone-simulator Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.28kB done
+#1 DONE 0.0s
+
+#2 [analytics internal] load build definition from Dockerfile
+#2 transferring dockerfile: 412B done
+#2 DONE 0.0s
+
+#3 [simulator internal] load build definition from Dockerfile
+#3 transferring dockerfile: 279B done
+#3 DONE 0.0s
+
+#4 [vision internal] load build definition from Dockerfile
+#4 transferring dockerfile: 404B done
+#4 DONE 0.0s
+
+#5 [agent internal] load build definition from Dockerfile
+#5 transferring dockerfile: 271B done
+#5 DONE 0.0s
+
+#6 [agent internal] load metadata for docker.io/library/python:3.11-slim
+#6 DONE 0.3s
+
+#7 [analytics internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [simulator internal] load .dockerignore
+#8 transferring context: 2B done
+#8 DONE 0.0s
+
+#9 [agent internal] load .dockerignore
+#9 transferring context: 2B done
+#9 DONE 0.0s
+
+#10 [vision internal] load .dockerignore
+#10 transferring context: 2B done
+#10 DONE 0.0s
+
+#11 [analytics internal] load build context
+#11 transferring context: 6.97kB done
+#11 DONE 0.0s
+
+#12 [simulator internal] load build context
+#12 transferring context: 7.40kB done
+#12 DONE 0.0s
+
+#13 [agent internal] load build context
+#13 transferring context: 22.68kB done
+#13 DONE 0.0s
+
+#14 [vision internal] load build context
+#14 transferring context: 4.71kB done
+#14 DONE 0.0s
+
+#15 [analytics 1/6] FROM docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535
+#15 resolve docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535 0.0s done
+#15 DONE 0.0s
+
+#16 [agent 5/6] COPY tools.py policy.py llm.py app.py ./
+#16 CACHED
+
+#17 [agent 4/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#17 CACHED
+
+#18 [agent 3/6] COPY requirements.txt .
+#18 CACHED
+
+#19 [analytics 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#19 CACHED
+
+#20 [analytics 4/6] COPY requirements.txt .
+#20 CACHED
+
+#21 [simulator 4/5] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#21 CACHED
+
+#22 [agent 2/5] WORKDIR /app
+#22 CACHED
+
+#23 [simulator 3/5] COPY requirements.txt .
+#23 CACHED
+
+#24 [vision 2/6] RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 && rm -rf /var/lib/apt/lists/*
+#24 CACHED
+
+#25 [vision 4/6] COPY requirements.txt .
+#25 CACHED
+
+#26 [vision 3/6] WORKDIR /app
+#26 CACHED
+
+#27 [vision 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#27 CACHED
+
+#28 [analytics 6/6] COPY features.py rules.py app.py ./
+#28 CACHED
+
+#29 [vision 6/6] COPY camera.py app.py ./
+#29 CACHED
+
+#30 [agent 6/6] COPY prompts ./prompts
+#30 CACHED
+
+#31 [simulator 5/5] COPY replay.py server.py scenario.yaml ./
+#31 CACHED
+
+#32 [analytics] exporting to image
+#32 exporting layers done
+#32 exporting manifest sha256:2b76fb6155bcae7188e5ea78cc4ec4c5dffb2adb733d6b570da2c86fb5b1e7d0 done
+#32 exporting config sha256:2d1e1861df4e41b2af4163e4777ec7a19298ba7dc5b520795862c9f09658371a done
+#32 exporting attestation manifest sha256:9685654dfd661956b6e1c2e2092a1f48a4768df83d945be26f676f60bbe2490b 0.0s done
+#32 exporting manifest list sha256:ead748cedcad6ae9a3d6baccdd8772b8e15800b3498041c0ea26d5d7dda8c937 done
+#32 naming to docker.io/library/cleanclone-analytics:latest done
+#32 unpacking to docker.io/library/cleanclone-analytics:latest done
+#32 DONE 0.0s
+
+#33 [vision] exporting to image
+#33 exporting layers done
+#33 exporting manifest sha256:8f7815d88e3114e0ee5e8b9ecd17a1539266af3a1e020818077ab5b18fd4695e done
+#33 exporting config sha256:3dbb1cd659dd234771e939cbaada834d5ca3cb034186490d509194ec97e0c8cc done
+#33 exporting attestation manifest sha256:b48286e6e49cb2fdb62eac26a678e3466cad17ab6da9c386734366ebe7a946ea 0.0s done
+#33 exporting manifest list sha256:6a4202d96cc918306a8d85f6c4362c593a4cc5ae8c80c2fc578b1b0c7f3b0028 done
+#33 naming to docker.io/library/cleanclone-vision:latest done
+#33 unpacking to docker.io/library/cleanclone-vision:latest done
+#33 DONE 0.1s
+
+#34 [agent] exporting to image
+#34 exporting layers done
+#34 exporting manifest sha256:7145d106d22eaaa22228b130a6bc3f781249cafc4f3109956dfc72f60c47b746 done
+#34 exporting config sha256:d1251ff2abc03fde2f58881c5759e88606bbd511b5bdd7208de880d5815298e8 done
+#34 exporting attestation manifest sha256:37037e9a669f2b5c71fe48d4bf3f220f192a02bd12d3200a447adaae4d997347 0.0s done
+#34 exporting manifest list sha256:b92e4e54802bb8e24a28fb85f3b8d1f153f929a7a1e2eab431d3cd99299f1def done
+#34 naming to docker.io/library/cleanclone-agent:latest done
+#34 unpacking to docker.io/library/cleanclone-agent:latest done
+#34 DONE 0.1s
+
+#35 [simulator] exporting to image
+#35 exporting layers done
+#35 exporting manifest sha256:53586a5f194569a7a08e2b6944ad7fb7dd1699a7814ef151aeb375259192e3ba done
+#35 exporting config sha256:824f54d565c9ffe8821b6962e419d31873fdae698d61980f50b38a8c664f885e done
+#35 exporting attestation manifest sha256:9a5435ab8bad9bedf0e277ebde97687d29880daef6617131729cc6fb342963d1 0.0s done
+#35 exporting manifest list sha256:050037ae970a3454776e1329ed7de1033da59479cc8b8461d2fa5db9058c181e done
+#35 naming to docker.io/library/cleanclone-simulator:latest done
+#35 unpacking to docker.io/library/cleanclone-simulator:latest done
+#35 DONE 0.1s
+
+#36 [simulator] resolving provenance for metadata file
+#36 DONE 0.0s
+
+#37 [agent] resolving provenance for metadata file
+#37 DONE 0.0s
+
+#38 [analytics] resolving provenance for metadata file
+#38 DONE 0.0s
+
+#39 [vision] resolving provenance for metadata file
+#39 DONE 0.0s
+ Image cleanclone-simulator Built 
+ Image cleanclone-analytics Built 
+ Image cleanclone-vision Built 
+ Image cleanclone-agent Built 
+ Container cleanclone-influxdb-1 Running 
+ Container cleanclone-ollama-1 Recreate 
+ Container cleanclone-simulator-1 Recreate 
+ Container cleanclone-simulator-1 Recreated 
+ Container cleanclone-vision-1 Recreate 
+ Container cleanclone-telegraf-1 Recreate 
+ Container cleanclone-ollama-1 Recreated 
+ Container cleanclone-telegraf-1 Recreated 
+ Container cleanclone-analytics-1 Recreate 
+ Container cleanclone-vision-1 Recreated 
+ Container cleanclone-analytics-1 Recreated 
+ Container cleanclone-agent-1 Recreate 
+ Container cleanclone-agent-1 Recreated 
+ Container cleanclone-ollama-1 Starting 
+ Container cleanclone-simulator-1 Starting 
+ Container cleanclone-influxdb-1 Waiting 
+ Container cleanclone-influxdb-1 Healthy 
+ Container cleanclone-ollama-1 Started 
+ Container cleanclone-simulator-1 Started 
+ Container cleanclone-simulator-1 Waiting 
+ Container cleanclone-simulator-1 Healthy 
+ Container cleanclone-vision-1 Starting 
+ Container cleanclone-telegraf-1 Starting 
+ Container cleanclone-vision-1 Started 
+ Container cleanclone-telegraf-1 Started 
+ Container cleanclone-analytics-1 Starting 
+ Container cleanclone-analytics-1 Started 
+ Container cleanclone-agent-1 Starting 
+ Container cleanclone-agent-1 Started 
+waiting for Ollama to finish downloading models (up to 25 min) ...
+waiting 100 s for data to flow ...
+PASS bearing_features: 179 points
+PASS predictions: 88 points
+PASS vision_inspection: 36 points
+PASS agent_decisions: 4 points
+agent decision modes:
+   7 [llm
+PASS logs/actions.log written
+ALL CHECKS PASSED
