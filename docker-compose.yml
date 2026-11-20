@@ -99,6 +99,7 @@ services:
       INFLUXDB_BUCKET: ${INFLUXDB_BUCKET:-machine}
       INFLUXDB_TOKEN: ${INFLUXDB_TOKEN:-dev-token-change-me}
       VISION_INTERVAL_S: ${VISION_INTERVAL_S:-5}
+      CAMERA_STATE_MAX_AGE_S: ${CAMERA_STATE_MAX_AGE_S:-15}
       MODELS_DIR: /models
       DEMO_DIR: /demo
       STATE_FILE: /shared/state.json
@@ -154,6 +155,7 @@ services:
       AGENT_INTERVAL_S: ${AGENT_INTERVAL_S:-10}
       REMINDER_S: ${REMINDER_S:-120}
       STARTUP_GRACE_S: ${STARTUP_GRACE_S:-120}
+      LOW_CONF_HOLD_S: ${LOW_CONF_HOLD_S:-60}
       LOG_DIR: /logs
       TZ: ${TZ:-UTC}
     volumes:

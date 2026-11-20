@@ -5,8 +5,6 @@ the model may add detail, but it cannot skip a required alert or invent one the 
 """
 import re
 
-from tools import SEVERITIES
-
 FAULT_NAMES = {"inner": "inner-race", "outer": "outer-race", "ball": "rolling-element (ball)"}
 URGENCY_TO_SEVERITY = {"none": "info", "low": "info", "medium": "warning", "high": "critical"}
 
@@ -83,41 +81,51 @@ def grounded(text, sit):
 
 
 def apply_guardrails(llm_calls, sit):
-    """Returns (calls, notes). Required actions come from rule_decision."""
+    """Returns (calls, notes). The rule table decides WHAT must happen; the model words the alert.
+
+    - Only the functions the situation requires are kept (an invented alarm or ticket is dropped).
+    - Alert severity and ticket priority are fixed to the rule-table value, so the model can neither
+      play a fault down nor escalate it (a 7 mil fault once came back as a HIGH ticket).
+    - Ticket action and time window always come from the rule table (the model once garbled them).
+    - The alert message is the model's own words, kept only if every number and fault type in it is
+      backed by the sensor report; otherwise the rule-table message is used.
+    - A required function the model left out is added; duplicates are removed.
+    """
     required = rule_decision(sit)
     notes = []
-    req_has_action = any(c["name"] != "no_action" for c in required)
-    if not req_has_action:
+    if all(c["name"] == "no_action" for c in required):
         # Sensors show nothing wrong: drop any alarm the model invented.
         kept = [c for c in llm_calls if c["name"] == "no_action"]
         if len(kept) != len(llm_calls):
             notes.append("dropped alarm not supported by sensors")
-        return kept or required, notes
-    out = list(llm_calls)
+        return kept[:1] or required, notes
+    out = []
     for req in required:
-        mine = [c for c in out if c["name"] == req["name"]]
+        mine = [c for c in llm_calls if c["name"] == req["name"]]
         if not mine:
-            out.append(req); notes.append(f"added required {req['name']}")
-        elif req["name"] == "send_alert":
-            floor = SEVERITIES.index(req["arguments"]["severity"])
-            for c in mine:
-                if SEVERITIES.index(c["arguments"]["severity"]) < floor:
-                    c["arguments"]["severity"] = req["arguments"]["severity"]
-                    notes.append("raised alert severity to required level")
-        elif req["name"] == "create_maintenance_ticket":
-            order = ["low", "medium", "high"]
-            for c in mine:
-                if order.index(c["arguments"]["priority"]) < order.index(req["arguments"]["priority"]):
-                    c["arguments"]["priority"] = req["arguments"]["priority"]
-                    notes.append("raised ticket priority to required level")
-    out = [c for c in out if c["name"] != "no_action"]
-    by_name = {c["name"]: c["arguments"] for c in required}
-    for c in out:
-        ref, args = by_name.get(c["name"]), c["arguments"]
-        if ref is None:
+            out.append(req)
+            notes.append(f"added required {req['name']}")
             continue
-        for field in ("message", "action", "within"):
-            if field in args and field in ref and not grounded(args[field], sit):
-                args[field] = ref[field]
-                notes.append(f"replaced ungrounded {c['name']}.{field}")
+        c = mine[0]
+        if len(mine) > 1:
+            notes.append(f"removed duplicate {req['name']}")
+        args = c["arguments"]
+        if req["name"] == "send_alert":
+            if args["severity"] != req["arguments"]["severity"]:
+                args["severity"] = req["arguments"]["severity"]
+                notes.append("set alert severity to required level")
+            if not grounded(args["message"], sit):
+                args["message"] = req["arguments"]["message"]
+                notes.append("replaced ungrounded send_alert.message")
+        else:  # create_maintenance_ticket
+            if args["priority"] != req["arguments"]["priority"]:
+                args["priority"] = req["arguments"]["priority"]
+                notes.append("set ticket priority to required level")
+            if args.get("action") != req["arguments"]["action"] or args.get("within") != req["arguments"]["within"]:
+                args["action"], args["within"] = req["arguments"]["action"], req["arguments"]["within"]
+                notes.append("used rule-table ticket text")
+        out.append(c)
+    names = {c["name"] for c in out}
+    if any(c["name"] not in names for c in llm_calls):
+        notes.append("dropped function not required by the situation")
     return out, notes

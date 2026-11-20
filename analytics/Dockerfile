@@ -5,4 +5,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
 COPY features.py rules.py app.py ./
+# Nothing here needs root: run as an unprivileged user
+RUN useradd --system --no-create-home app
+USER app
 CMD ["python", "app.py"]

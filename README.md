@@ -35,7 +35,8 @@ flowchart LR
 
 ### How the agent stays safe
 - The LLM answers in a JSON schema, so the output is always a valid function call.
-- A rule policy defines what must happen. The model cannot skip a required alert, lower its severity, or raise an alarm the sensors do not support.
+- A rule policy defines what must happen. The model chooses the functions and words the alert, but it cannot skip a required alert, change its severity or a ticket's priority, rewrite the ticket's action or time window, or raise an alarm the sensors do not support. A message that contains a number or fault type the sensors did not report is replaced by the rule-table text.
+- If a sensor stops (or never starts), the agent raises a stale-data alert and repeats it every `REMINDER_S` seconds until data returns. A fault reading with low confidence is treated as a transition for `LOW_CONF_HOLD_S` seconds and acted on if it persists.
 - Any alert text with a number, fault type or urgency that is not in the sensor report is replaced by a templated sentence.
 - If the model is slow, down or invalid, the agent falls back to the 0.6B model and then to the rule policy. Stale sensor data raises its own warning.
 - The agent only calls the model when the situation changes, plus a reminder every 2 minutes during a fault.
@@ -71,7 +72,8 @@ The scenario run produces the expected sequence of decisions: no action when hea
 - **Vision accuracy is probably optimistic.** The thermal dataset is easily separable (perfect score even with the camera overlay blanked), and healthy and corroded images may come from different sessions. It shows the pipeline works, not how well it would find subtle corrosion on another machine.
 - **The vibration and thermal datasets come from different machines.** They are matched by condition only (healthy motor shows a healthy image), which is a simulation choice.
 - **CPU-only LLM in Docker.** On macOS, Docker cannot use the GPU. Running Ollama natively (set `OLLAMA_URL=http://host.docker.internal:11434` and start with `--scale ollama=0`) is much faster.
-- Sampling-rate assumption: the CWRU normal baseline files are treated as 48 kHz and resampled to 12 kHz, following the dataset's documentation in the literature.
+- **The anomaly flag does not raise alerts.** The agent acts on the fault classifier and the camera. The anomaly score (16.7 % false alarms on held-out healthy data) is recorded in InfluxDB and used for the prescriptive text, but a reading that is merely anomalous, with a normal classification, is not escalated.
+- **Sampling-rate assumption:** the CWRU normal baseline files are treated as 48 kHz and resampled to 12 kHz, following the dataset's documentation in the literature.
 
 ## Moving to a real machine
 Only the Telegraf input changes: set `MODBUS_HOST` and `MODBUS_PORT` in `.env` and, if the device uses another register layout, edit the addresses in `telegraf/telegraf.conf`. Replace `vision/camera.py`'s `capture()` with a real camera grab. Analytics, agent and storage are unchanged.
@@ -85,6 +87,8 @@ python scripts/prepare_thermal.py          # needs data/raw/thermal (Mendeley th
 python analytics/train.py
 VISION_MASK_TOP=0.15 python vision/train.py
 ```
+Run the unit tests with `pytest tests` (agent policy and guardrails, call validation, anomaly transform, prescriptive rules, simulated camera). They need no Docker and no datasets.
+
 Raw datasets are not in the repository. Trained models, the processed feature table and a small demo image set are, so a clean clone runs without them.
 
 ## Datasets
@@ -100,6 +104,7 @@ simulator/   Modbus TCP replay server and scenario.yaml
 telegraf/    telegraf.conf (the only file to change for a real device)
 ollama/      entrypoint that pulls the models on first start
 scripts/     data preparation, pipeline check, LLM probe, clean-clone test
+tests/       unit tests (pytest tests)
 docs/        DEMO.md (demo script) and results/ (evaluation and test outputs)
 logs/        alerts.log, tickets.log, actions.log (written at runtime)
 ```

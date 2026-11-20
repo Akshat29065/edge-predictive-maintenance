@@ -11,6 +11,7 @@ from pathlib import Path
 
 import numpy as np
 import onnxruntime as ort
+from PIL import Image
 
 from camera import SimulatedCamera
 
@@ -29,10 +30,15 @@ class Classifier:
                                             providers=["CPUExecutionProvider"])
 
     def classify(self, img):
-        img = img.convert("RGB").resize((self.size, self.size))
-        a = np.array(img)
-        a[: int(self.size * self.mask_top)] = 0          # same blanking as in training
-        x = a.astype(np.float32) / 255.0
+        # Same steps, in the same order, as vision/train.py `prepare`: blank the top of the FRAME (camera
+        # text overlay), then resize with bilinear. Doing it the other way round changes real camera frames.
+        img = img.convert("RGB")
+        if self.mask_top > 0:
+            a = np.array(img)
+            a[: int(a.shape[0] * self.mask_top)] = 0
+            img = Image.fromarray(a)
+        img = img.resize((self.size, self.size), Image.BILINEAR)
+        x = np.asarray(img).astype(np.float32) / 255.0
         probs = self.session.run(None, {"image": x.transpose(2, 0, 1)[None]})[0][0]
         i = int(probs.argmax())
         return {"label": self.labels[i], "confidence": float(probs[i]),

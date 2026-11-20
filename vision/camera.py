@@ -8,12 +8,17 @@ physical world. To use a real camera, replace `capture()` with a function that g
 """
 import csv
 import json
+import os
 import random
+import time
 from pathlib import Path
 
 from PIL import Image
 
 LOAD_BY_HP = {0: "no", 1: "medium", 2: "medium", 3: "full"}
+# The simulator rewrites the state file every tick. An older file means the simulator is down:
+# a camera that kept showing the last condition would hide that outage from the vision stream.
+MAX_STATE_AGE_S = float(os.environ.get("CAMERA_STATE_MAX_AGE_S", "15"))
 
 
 class SimulatedCamera:
@@ -25,10 +30,12 @@ class SimulatedCamera:
             raise RuntimeError(f"no demo images in {self.dir}")
 
     def capture(self):
-        """Returns (PIL image, frame id) or None if the simulator has not started yet."""
+        """Returns (PIL image, frame id), or None if the simulator has not started or has stopped."""
         try:
             state = json.loads(self.state_file.read_text())
         except (OSError, ValueError):
+            return None
+        if time.time() - float(state.get("timestamp", 0)) > MAX_STATE_AGE_S:
             return None
         label = "healthy" if state["healthy"] else "faulty"
         load = LOAD_BY_HP.get(state["load_hp"], "medium")

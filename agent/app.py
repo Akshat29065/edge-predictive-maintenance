@@ -95,6 +95,10 @@ from(bucket: "{bucket}") |> range(start: -1h)
 
 
 def situation_key(sit):
+    if sit["agreement"] in ("stale", "unknown"):
+        # Whatever the old sensor values were, "data is missing" is ONE situation: it is raised once and
+        # then repeated every REMINDER_S, not each time a stale value changes.
+        return (sit["agreement"],)
     a, v = sit.get("analytics") or {}, sit.get("vision") or {}
     return (sit["agreement"], a.get("condition"), a.get("severity_mil"), a.get("urgency"), v.get("label"))
 
@@ -109,6 +113,7 @@ def main():
     interval = float(env("AGENT_INTERVAL_S", "10"))
     reminder = float(env("REMINDER_S", "120"))
     min_conf = float(env("MIN_CONFIDENCE", "0.8"))
+    low_hold = float(env("LOW_CONF_HOLD_S", "60"))    # how long a low-confidence reading is treated as a transition
     stale_s = float(env("STALE_S", "30"))
     system = Path(env("PROMPT_FILE", "/app/prompts/system.txt")).read_text()
     llm = OllamaClient(env("OLLAMA_URL", "http://ollama:11434"), system, float(env("LLM_TIMEOUT_S", "30")), env("LLM_MODE", "json"))
@@ -116,7 +121,7 @@ def main():
                   Executor(env("LOG_DIR", "/logs")))
     startup_grace = float(env("STARTUP_GRACE_S", "120"))
     started = time.time()
-    last_key, last_act = None, 0.0
+    last_key, last_act, low_since = None, 0.0, None
     with InfluxDBClient(url=url, token=token, org=org) as client:
         write = client.write_api(write_options=SYNCHRONOUS)
         while True:
@@ -124,7 +129,11 @@ def main():
                 sit = read_situation(client, bucket, org, stale_s, time.time() - started >= startup_grace)
                 a = sit["analytics"]
                 waiting = sit["agreement"] == "unknown"
-                transition = a is not None and not a["stale"] and a["confidence"] < min_conf
+                low = a is not None and not a["stale"] and a["confidence"] < min_conf
+                low_since = (low_since or time.time()) if low else None
+                # Low confidence is normally a brief switch between conditions: wait. If it persists for
+                # LOW_CONF_HOLD_S the situation is real but unclear, and the agent acts on it anyway.
+                transition = low and time.time() - low_since < low_hold
                 key = situation_key(sit)
                 due = key != last_key or (sit["agreement"] != "healthy" and time.time() - last_act >= reminder)
                 if waiting or transition or not due:
@@ -137,9 +146,12 @@ def main():
                              f" notes={notes}" if notes else "")
                     if error:
                         log.warning("LLM unavailable, used rules: %s", error)
+                    summary = json.dumps(calls, separators=(",", ":"))
+                    if len(summary) > 900:      # never store cut-off (invalid) JSON
+                        summary = json.dumps([c["name"] for c in calls])
                     p = (Point("agent_decisions").tag("asset", ASSET).field("agreement", sit["agreement"])
                          .field("mode", mode).field("tools", names).field("latency_s", latency)
-                         .field("summary", json.dumps(calls)[:900]))
+                         .field("summary", summary))
                     write.write(bucket=bucket, org=org, record=p)
             except Exception as exc:
                 log.warning("cycle failed: %s", exc)

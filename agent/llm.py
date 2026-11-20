@@ -1,4 +1,5 @@
-"""Minimal Ollama client (standard library only) for tool calling."""
+"""Minimal Ollama client (standard library only). Default 'json' mode asks for schema-constrained JSON
+function calls; 'tools' mode uses Ollama's native tool calling."""
 import json
 import re
 import urllib.request

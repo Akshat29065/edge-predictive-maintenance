@@ -4,6 +4,7 @@ Every call is validated before it runs, so a model that invents a function or an
 cannot do anything. To add a skill: add its schema to TOOLS, a validator and an executor here.
 """
 import json
+import re
 import time
 from pathlib import Path
 
@@ -34,6 +35,14 @@ TOOLS = [
 ]
 
 
+def _clean(value, limit=300):
+    """One line of plain text: None becomes empty, control characters and newlines become spaces.
+    Stops model output from forging extra lines in the log files."""
+    if value is None:
+        return ""
+    return " ".join(re.sub(r"[\x00-\x1f\x7f]", " ", str(value)).split())[:limit]
+
+
 def validate(call):
     """Returns a cleaned call dict, or None if the call is not allowed."""
     name, args = call.get("name"), call.get("arguments") or {}
@@ -44,7 +53,7 @@ def validate(call):
             return None
     if not isinstance(args, dict):
         return None
-    text = lambda k, d="": str(args.get(k, d))[:300]
+    text = lambda k, d="": _clean(args.get(k)) or d
     # A missing severity/priority defaults to a mid value; the policy raises it to the required level anyway.
     # A value that is present but not allowed is still rejected.
     severity, priority = args.get("severity", "warning"), args.get("priority", "medium")
