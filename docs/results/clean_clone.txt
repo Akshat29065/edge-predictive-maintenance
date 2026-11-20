@@ -1,0 +1,180 @@
+PASS committed: data/processed/cwru_features.csv
+PASS committed: analytics/models/fault_model.txt
+PASS committed: vision/models/thermal.onnx
+PASS committed: vision/demo_images/index.csv
+starting test stack (no .env, defaults only) ...
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.28kB done
+#1 DONE 0.0s
+
+#2 [agent internal] load build definition from Dockerfile
+#2 transferring dockerfile: 237B done
+#2 DONE 0.0s
+
+#3 [vision internal] load build definition from Dockerfile
+#3 transferring dockerfile: 370B done
+#3 DONE 0.0s
+
+#4 [analytics internal] load build definition from Dockerfile
+#4 transferring dockerfile: 378B done
+#4 DONE 0.0s
+
+#5 [simulator internal] load build definition from Dockerfile
+#5 transferring dockerfile: 245B done
+#5 DONE 0.0s
+
+#6 [agent internal] load metadata for docker.io/library/python:3.11-slim
+#6 DONE 0.0s
+
+#7 [vision internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [simulator internal] load .dockerignore
+#8 transferring context: 2B done
+#8 DONE 0.0s
+
+#9 [agent internal] load .dockerignore
+#9 transferring context: 2B done
+#9 DONE 0.0s
+
+#10 [analytics internal] load .dockerignore
+#10 transferring context: 2B done
+#10 DONE 0.0s
+
+#11 [simulator internal] load build context
+#11 transferring context: 7.40kB done
+#11 DONE 0.0s
+
+#12 [vision internal] load build context
+#12 transferring context: 4.71kB done
+#12 DONE 0.0s
+
+#13 [analytics internal] load build context
+#13 transferring context: 6.85kB done
+#13 DONE 0.0s
+
+#14 [agent internal] load build context
+#14 transferring context: 21.85kB done
+#14 DONE 0.0s
+
+#15 [agent 1/6] FROM docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535
+#15 resolve docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535 0.0s done
+#15 DONE 0.0s
+
+#16 [vision 3/6] WORKDIR /app
+#16 CACHED
+
+#17 [vision 2/6] RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 && rm -rf /var/lib/apt/lists/*
+#17 CACHED
+
+#18 [vision 4/6] COPY requirements.txt .
+#18 CACHED
+
+#19 [vision 5/6] RUN pip install --no-cache-dir -r requirements.txt
+#19 CACHED
+
+#20 [vision 6/6] COPY camera.py app.py ./
+#20 CACHED
+
+#21 [analytics 5/6] RUN pip install --no-cache-dir -r requirements.txt
+#21 CACHED
+
+#22 [analytics 4/6] COPY requirements.txt .
+#22 CACHED
+
+#17 [analytics 2/6] RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 && rm -rf /var/lib/apt/lists/*
+#17 CACHED
+
+#16 [analytics 3/6] WORKDIR /app
+#16 CACHED
+
+#23 [agent 4/6] RUN pip install --no-cache-dir -r requirements.txt
+#23 CACHED
+
+#24 [agent 5/6] COPY tools.py policy.py llm.py app.py ./
+#24 CACHED
+
+#25 [agent 3/6] COPY requirements.txt .
+#25 CACHED
+
+#26 [simulator 3/5] COPY requirements.txt .
+#26 CACHED
+
+#27 [simulator 2/5] WORKDIR /app
+#27 CACHED
+
+#28 [simulator 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#28 CACHED
+
+#29 [analytics 6/6] COPY features.py rules.py app.py ./
+#29 CACHED
+
+#30 [agent 6/6] COPY prompts ./prompts
+#30 CACHED
+
+#31 [simulator 5/5] COPY replay.py server.py scenario.yaml ./
+#31 CACHED
+
+#32 [simulator] exporting to image
+#32 exporting layers done
+#32 exporting manifest sha256:4aa53e60e19a10417803b114402833acd79291ac8f15fc3b7e23acd5905cde96 0.0s done
+#32 exporting config sha256:7feecd2f0ef89854702f93e74daf95b831057303d75e5bc326d456aa2b4f6e8f done
+#32 exporting attestation manifest sha256:323219961f07e55feb7e978a90d32cf267263a23b450a7ae45c8dc19a55f4234 0.0s done
+#32 exporting manifest list sha256:d03bf980658e83d874820e3b1b275b88dfa28c8c08127f0182d5921caa4097cd done
+#32 naming to docker.io/library/cleanclone-simulator:latest done
+#32 unpacking to docker.io/library/cleanclone-simulator:latest done
+#32 DONE 0.1s
+
+#33 [agent] exporting to image
+#33 exporting layers done
+#33 exporting manifest sha256:f4fe1d744655d0d6869194bc91b962f846de89bd8e4a8af847200ca653712ca4 0.0s done
+#33 exporting config sha256:310763e3b3cc890d6efca6bef2e21795852f054b7aeb195f2772d106dcc72a32 done
+#33 exporting attestation manifest sha256:972da73ae241946713673e47561f78b0b1037709de8875a59e6572f8baf7d847 0.0s done
+#33 exporting manifest list sha256:98060958e74c972812a30af024500845922b9f97588f20d4b019baa65cdf853a done
+#33 naming to docker.io/library/cleanclone-agent:latest done
+#33 unpacking to docker.io/library/cleanclone-agent:latest done
+#33 DONE 0.1s
+
+#34 [analytics] exporting to image
+#34 exporting layers done
+#34 exporting manifest sha256:0df8841f958fa848899d8b695a729d89e209dff4dbc7c2e9a387eccce8bd89f2 0.0s done
+#34 exporting config sha256:fec9ba13a48e98d478c44feb720aa55587bbfa3b9d8f0c0898934d8304737fb0 done
+#34 exporting attestation manifest sha256:01d9cb66cab371aefe0b93e4f67a92e90f98e9d8eba575afa7d5db18a8f718d2 0.0s done
+#34 exporting manifest list sha256:00c9f98fc91deddf6c5ef4b9f64aa40bb067272b9c0ef7497e7acee2d3929357 done
+#34 naming to docker.io/library/cleanclone-analytics:latest done
+#34 unpacking to docker.io/library/cleanclone-analytics:latest done
+#34 DONE 0.1s
+
+#35 [vision] exporting to image
+#35 exporting layers done
+#35 exporting manifest sha256:4181d1e0b4cf6e109ef0373995743f044eeaa6e735e2eafb9c6e10bfa60c9221 0.0s done
+#35 exporting config sha256:fedd082de41f19bd67b18ac995f5732cf94a7ff09e246f60c23dfec5e635ed38 done
+#35 exporting attestation manifest sha256:eb1c2fcc92bf65e6da8e1aa6cb20318ea392bfcc3dfb6c6844a3babe1af0ff36 0.0s done
+#35 exporting manifest list sha256:49bf02f91f4e421061caac4b7283dbe908295315b36ddffe851067c9df41ac90 done
+#35 naming to docker.io/library/cleanclone-vision:latest done
+#35 unpacking to docker.io/library/cleanclone-vision:latest done
+#35 DONE 0.1s
+
+#36 [simulator] resolving provenance for metadata file
+#36 DONE 0.0s
+
+#37 [analytics] resolving provenance for metadata file
+#37 DONE 0.0s
+
+#38 [vision] resolving provenance for metadata file
+#38 DONE 0.0s
+
+#39 [agent] resolving provenance for metadata file
+#39 DONE 0.0s
+waiting for Ollama to finish downloading models (up to 25 min) ...
+waiting 100 s for data to flow ...
+PASS bearing_features: 180 points
+PASS predictions: 88 points
+PASS vision_inspection: 36 points
+PASS agent_decisions: 3 points
+agent decision modes:
+   3 [llm
+   5 [rules
+PASS logs/actions.log written
+ALL CHECKS PASSED

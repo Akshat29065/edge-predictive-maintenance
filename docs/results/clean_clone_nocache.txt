@@ -1,0 +1,404 @@
+PASS committed: data/processed/cwru_features.csv
+PASS committed: analytics/models/fault_model.txt
+PASS committed: vision/models/thermal.onnx
+PASS committed: vision/demo_images/index.csv
+starting test stack (no .env, defaults only) ...
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.28kB done
+#1 DONE 0.0s
+
+#2 [agent internal] load build definition from Dockerfile
+#2 transferring dockerfile: 271B done
+#2 DONE 0.0s
+
+#3 [simulator internal] load build definition from Dockerfile
+#3 transferring dockerfile: 279B done
+#3 DONE 0.0s
+
+#4 [vision internal] load build definition from Dockerfile
+#4 transferring dockerfile: 404B done
+#4 DONE 0.0s
+
+#5 [analytics internal] load build definition from Dockerfile
+#5 transferring dockerfile: 412B done
+#5 DONE 0.0s
+
+#6 [simulator internal] load metadata for docker.io/library/python:3.11-slim
+#6 DONE 0.1s
+
+#7 [agent internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [vision internal] load .dockerignore
+#8 transferring context: 2B done
+#8 DONE 0.0s
+
+#9 [analytics internal] load .dockerignore
+#9 transferring context: 2B done
+#9 DONE 0.0s
+
+#10 [simulator internal] load .dockerignore
+#10 transferring context: 2B done
+#10 DONE 0.0s
+
+#11 [agent internal] load build context
+#11 transferring context: 21.85kB done
+#11 DONE 0.0s
+
+#12 [vision internal] load build context
+#12 transferring context: 4.71kB done
+#12 DONE 0.0s
+
+#13 [analytics internal] load build context
+#13 transferring context: 6.85kB done
+#13 DONE 0.0s
+
+#14 [simulator internal] load build context
+#14 transferring context: 7.40kB done
+#14 DONE 0.0s
+
+#15 [simulator 1/6] FROM docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535
+#15 resolve docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535 0.0s done
+#15 DONE 0.0s
+
+#16 [agent 2/6] WORKDIR /app
+#16 CACHED
+
+#17 [agent 3/6] COPY requirements.txt .
+#17 CACHED
+
+#16 [simulator 2/6] WORKDIR /app
+#16 CACHED
+
+#18 [analytics 3/6] WORKDIR /app
+#18 CACHED
+
+#19 [analytics 2/6] RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 && rm -rf /var/lib/apt/lists/*
+#19 CACHED
+
+#20 [analytics 4/6] COPY requirements.txt .
+#20 CACHED
+
+#21 [simulator 3/5] COPY requirements.txt .
+#21 CACHED
+
+#22 [vision 4/6] COPY requirements.txt .
+#22 CACHED
+
+#23 [vision 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#23 2.864 Collecting onnxruntime==1.22.1 (from -r requirements.txt (line 1))
+#23 3.691   Downloading onnxruntime-1.22.1-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl.metadata (4.6 kB)
+#23 ...
+
+#24 [agent 4/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#24 1.658 Collecting influxdb-client==1.50.0 (from -r requirements.txt (line 1))
+#24 3.185   Downloading influxdb_client-1.50.0-py3-none-any.whl.metadata (65 kB)
+#24 4.055      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.5/65.5 kB 126.7 kB/s eta 0:00:00
+#24 4.598 Collecting reactivex>=4.0.4 (from influxdb-client==1.50.0->-r requirements.txt (line 1))
+#24 4.771   Downloading reactivex-6.1.1-py3-none-any.whl.metadata (6.4 kB)
+#24 5.018 Collecting certifi>=14.05.14 (from influxdb-client==1.50.0->-r requirements.txt (line 1))
+#24 5.730   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+#24 5.916 Collecting python-dateutil>=2.5.3 (from influxdb-client==1.50.0->-r requirements.txt (line 1))
+#24 5.970   Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+#24 8.097 Collecting urllib3>=1.26.0 (from influxdb-client==1.50.0->-r requirements.txt (line 1))
+#24 8.178   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+#24 ...
+
+#23 [vision 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#23 8.416 Collecting numpy==2.2.6 (from -r requirements.txt (line 2))
+#23 8.507   Downloading numpy-2.2.6-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (63 kB)
+#23 9.714      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.4/63.4 kB 64.2 kB/s eta 0:00:00
+#23 ...
+
+#25 [analytics 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#25 1.578 Collecting lightgbm==4.7.0 (from -r requirements.txt (line 1))
+#25 3.333   Downloading lightgbm-4.7.0-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl.metadata (18 kB)
+#25 8.198 Collecting numpy==2.2.6 (from -r requirements.txt (line 2))
+#25 8.316   Downloading numpy-2.2.6-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (63 kB)
+#25 8.894      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.4/63.4 kB 94.0 kB/s eta 0:00:00
+#25 9.311 Collecting influxdb-client==1.50.0 (from -r requirements.txt (line 3))
+#25 9.549   Downloading influxdb_client-1.50.0-py3-none-any.whl.metadata (65 kB)
+#25 9.718      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.5/65.5 kB 332.3 kB/s eta 0:00:00
+#25 ...
+
+#26 [simulator 4/5] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#26 1.661 Collecting pymodbus==3.9.2 (from -r requirements.txt (line 1))
+#26 3.386   Downloading pymodbus-3.9.2-py3-none-any.whl.metadata (15 kB)
+#26 4.083 Collecting PyYAML==6.0.3 (from -r requirements.txt (line 2))
+#26 4.770   Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (2.4 kB)
+#26 4.883 Downloading pymodbus-3.9.2-py3-none-any.whl (165 kB)
+#26 8.322    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 165.2/165.2 kB 50.6 kB/s eta 0:00:00
+#26 8.386 Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (775 kB)
+#26 ...
+
+#24 [agent 4/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#24 10.39 Collecting tzdata (from python-dateutil>=2.5.3->influxdb-client==1.50.0->-r requirements.txt (line 1))
+#24 10.62   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+#24 11.02 Collecting typing-extensions<5,>=4.15.0 (from reactivex>=4.0.4->influxdb-client==1.50.0->-r requirements.txt (line 1))
+#24 11.17   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#24 11.73 Downloading influxdb_client-1.50.0-py3-none-any.whl (746 kB)
+#24 ...
+
+#23 [vision 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#23 12.83 Collecting pillow==11.3.0 (from -r requirements.txt (line 3))
+#23 13.08   Downloading pillow-11.3.0-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl.metadata (9.0 kB)
+#23 13.54 Collecting influxdb-client==1.50.0 (from -r requirements.txt (line 4))
+#23 13.88   Downloading influxdb_client-1.50.0-py3-none-any.whl.metadata (65 kB)
+#23 14.16      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.5/65.5 kB 222.0 kB/s eta 0:00:00
+#23 14.30 Collecting coloredlogs (from onnxruntime==1.22.1->-r requirements.txt (line 1))
+#23 14.57   Downloading coloredlogs-15.0.1-py2.py3-none-any.whl.metadata (12 kB)
+#23 14.78 Collecting flatbuffers (from onnxruntime==1.22.1->-r requirements.txt (line 1))
+#23 15.00   Downloading flatbuffers-25.12.19-py2.py3-none-any.whl.metadata (1.0 kB)
+#23 15.01 Requirement already satisfied: packaging in /usr/local/lib/python3.11/site-packages (from onnxruntime==1.22.1->-r requirements.txt (line 1)) (26.3)
+#23 ...
+
+#24 [agent 4/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#24 16.75    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 746.3/746.3 kB 146.6 kB/s eta 0:00:00
+#24 16.77 Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+#24 18.55    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 77.2 kB/s eta 0:00:00
+#24 18.73 Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+#24 19.34    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 92.9/92.9 kB 171.3 kB/s eta 0:00:00
+#24 19.80 Downloading reactivex-6.1.1-py3-none-any.whl (261 kB)
+#24 ...
+
+#25 [analytics 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#25 10.67 Collecting narwhals>=1.15 (from lightgbm==4.7.0->-r requirements.txt (line 1))
+#25 10.73   Downloading narwhals-2.29.0-py3-none-any.whl.metadata (15 kB)
+#25 13.18 Collecting scipy (from lightgbm==4.7.0->-r requirements.txt (line 1))
+#25 13.34   Downloading scipy-1.17.1-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl.metadata (62 kB)
+#25 13.45      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.1/62.1 kB 485.9 kB/s eta 0:00:00
+#25 13.90 Collecting reactivex>=4.0.4 (from influxdb-client==1.50.0->-r requirements.txt (line 3))
+#25 13.99   Downloading reactivex-6.1.1-py3-none-any.whl.metadata (6.4 kB)
+#25 14.21 Collecting certifi>=14.05.14 (from influxdb-client==1.50.0->-r requirements.txt (line 3))
+#25 14.29   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+#25 14.61 Collecting python-dateutil>=2.5.3 (from influxdb-client==1.50.0->-r requirements.txt (line 3))
+#25 14.72   Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+#25 15.16 Collecting urllib3>=1.26.0 (from influxdb-client==1.50.0->-r requirements.txt (line 3))
+#25 15.21   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+#25 15.86 Collecting tzdata (from python-dateutil>=2.5.3->influxdb-client==1.50.0->-r requirements.txt (line 3))
+#25 15.93   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+#25 16.77 Collecting typing-extensions<5,>=4.15.0 (from reactivex>=4.0.4->influxdb-client==1.50.0->-r requirements.txt (line 3))
+#25 16.83   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#25 16.93 Downloading lightgbm-4.7.0-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl (3.3 MB)
+#25 ...
+
+#24 [agent 4/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#24 22.48    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 261.0/261.0 kB 94.0 kB/s eta 0:00:00
+#24 22.55 Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+#24 23.40    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 178.5 kB/s eta 0:00:00
+#24 23.47 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#24 23.85    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 144.6 kB/s eta 0:00:00
+#24 24.07 Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+#24 ...
+
+#26 [simulator 4/5] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#26 23.17    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 775.6/775.6 kB 52.5 kB/s eta 0:00:00
+#26 23.21 Installing collected packages: PyYAML, pymodbus
+#26 23.28 Successfully installed PyYAML-6.0.3 pymodbus-3.9.2
+#26 23.28 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#26 24.36 
+#26 24.36 [notice] A new release of pip is available: 24.0 -> 26.3
+#26 24.36 [notice] To update, run: pip install --upgrade pip
+#26 DONE 24.5s
+
+#27 [simulator 5/5] COPY replay.py server.py scenario.yaml ./
+#27 DONE 0.0s
+
+#28 [simulator] exporting to image
+#28 exporting layers
+#28 exporting layers 0.3s done
+#28 exporting manifest sha256:44cdf18bd72dc78ef509525e11c69be8f9c2e4b3567f869a07ae5be0dce0cff0 done
+#28 exporting config sha256:6a65aec1d538497f1a76d0001ffcd7bc45f22a118ef704d7dea00dae9fa364f7 done
+#28 exporting attestation manifest sha256:4db44a0a43c16b6b6f923eac8ce21e70c6591fed57bff059a7d9793c7ec98064 done
+#28 exporting manifest list sha256:2fe8955236a36c885ccac634b3f13d666c48b760dc5ab5cbc9f847702e782ead done
+#28 naming to docker.io/library/cleanclone-simulator:latest done
+#28 unpacking to docker.io/library/cleanclone-simulator:latest 0.1s done
+#28 DONE 0.4s
+
+#29 [simulator] resolving provenance for metadata file
+#29 DONE 0.0s
+
+#23 [vision 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#23 22.58 Collecting protobuf (from onnxruntime==1.22.1->-r requirements.txt (line 1))
+#23 22.69   Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_aarch64.whl.metadata (595 bytes)
+#23 23.18 Collecting sympy (from onnxruntime==1.22.1->-r requirements.txt (line 1))
+#23 23.37   Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+#23 23.66 Collecting reactivex>=4.0.4 (from influxdb-client==1.50.0->-r requirements.txt (line 4))
+#23 23.83   Downloading reactivex-6.1.1-py3-none-any.whl.metadata (6.4 kB)
+#23 24.57 Collecting certifi>=14.05.14 (from influxdb-client==1.50.0->-r requirements.txt (line 4))
+#23 24.90   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+#23 25.10 Collecting python-dateutil>=2.5.3 (from influxdb-client==1.50.0->-r requirements.txt (line 4))
+#23 25.15   Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+#23 26.12 Collecting urllib3>=1.26.0 (from influxdb-client==1.50.0->-r requirements.txt (line 4))
+#23 26.16   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+#23 26.48 Collecting tzdata (from python-dateutil>=2.5.3->influxdb-client==1.50.0->-r requirements.txt (line 4))
+#23 26.66   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+#23 27.15 Collecting typing-extensions<5,>=4.15.0 (from reactivex>=4.0.4->influxdb-client==1.50.0->-r requirements.txt (line 4))
+#23 27.36   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#23 28.05 Collecting humanfriendly>=9.1 (from coloredlogs->onnxruntime==1.22.1->-r requirements.txt (line 1))
+#23 28.31   Downloading humanfriendly-10.0-py2.py3-none-any.whl.metadata (9.2 kB)
+#23 ...
+
+#24 [agent 4/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#24 27.06    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 348.2/348.2 kB 122.4 kB/s eta 0:00:00
+#24 27.11 Installing collected packages: urllib3, tzdata, typing-extensions, certifi, reactivex, python-dateutil, influxdb-client
+#24 27.44 Successfully installed certifi-2026.10.23 influxdb-client-1.50.0 python-dateutil-4.0.0 reactivex-6.1.1 typing-extensions-4.16.0 tzdata-2026.6 urllib3-2.8.0
+#24 27.44 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#24 28.35 
+#24 28.35 [notice] A new release of pip is available: 24.0 -> 26.3
+#24 28.35 [notice] To update, run: pip install --upgrade pip
+#24 DONE 28.4s
+
+#30 [agent 5/6] COPY tools.py policy.py llm.py app.py ./
+#30 DONE 0.0s
+
+#31 [agent 6/6] COPY prompts ./prompts
+#31 DONE 0.0s
+
+#32 [agent] exporting to image
+#32 exporting layers 0.4s done
+#32 exporting manifest sha256:86510a2d2ba74f6888a78aaf0f3f488c4a06271d8cd3ea1e3fe58f561de8d258 done
+#32 exporting config sha256:3a597c5dd7f85282e3efd3415c2db84d51b6a54510f1451c79e001e8a1622b4e done
+#32 exporting attestation manifest sha256:394f2e6828d0ca647802f687cb117f39e3dd9a18fc388109766d83ec6241d2ff done
+#32 exporting manifest list sha256:0fcb0be943a99ee2eb1d407b21371d9c2f11e0521ae58c4c518572fbcd2341a6 done
+#32 naming to docker.io/library/cleanclone-agent:latest done
+#32 unpacking to docker.io/library/cleanclone-agent:latest
+#32 unpacking to docker.io/library/cleanclone-agent:latest 0.2s done
+#32 DONE 0.6s
+
+#33 [agent] resolving provenance for metadata file
+#33 DONE 0.0s
+
+#23 [vision 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#23 28.62 Collecting mpmath<1.4,>=1.1.0 (from sympy->onnxruntime==1.22.1->-r requirements.txt (line 1))
+#23 28.68   Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+#23 28.76 Downloading onnxruntime-1.22.1-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl (14.5 MB)
+#23 ...
+
+#25 [analytics 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#25 39.27    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 149.8 kB/s eta 0:00:00
+#25 39.45 Downloading numpy-2.2.6-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (14.3 MB)
+#25 ...
+
+#23 [vision 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#23 104.8    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 14.5/14.5 MB 193.9 kB/s eta 0:00:00
+#23 104.9 Downloading numpy-2.2.6-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (14.3 MB)
+#23 ...
+
+#25 [analytics 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#25 106.8    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 14.3/14.3 MB 243.2 kB/s eta 0:00:00
+#25 107.1 Downloading influxdb_client-1.50.0-py3-none-any.whl (746 kB)
+#25 108.4    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 746.3/746.3 kB 543.9 kB/s eta 0:00:00
+#25 108.7 Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+#25 109.0    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 388.4 kB/s eta 0:00:00
+#25 109.3 Downloading narwhals-2.29.0-py3-none-any.whl (501 kB)
+#25 110.3    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 501.7/501.7 kB 526.0 kB/s eta 0:00:00
+#25 110.6 Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+#25 110.8    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 92.9/92.9 kB 471.0 kB/s eta 0:00:00
+#25 111.2 Downloading reactivex-6.1.1-py3-none-any.whl (261 kB)
+#25 111.9    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 261.0/261.0 kB 358.4 kB/s eta 0:00:00
+#25 112.1 Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+#25 112.5    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 284.5 kB/s eta 0:00:00
+#25 112.9 Downloading scipy-1.17.1-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl (33.1 MB)
+#25 ...
+
+#23 [vision 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#23 134.6    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 14.3/14.3 MB 453.7 kB/s eta 0:00:00
+#23 134.7 Downloading pillow-11.3.0-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl (6.0 MB)
+#23 148.3    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.0/6.0 MB 442.2 kB/s eta 0:00:00
+#23 148.4 Downloading influxdb_client-1.50.0-py3-none-any.whl (746 kB)
+#23 149.2    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 746.3/746.3 kB 868.8 kB/s eta 0:00:00
+#23 149.5 Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+#23 149.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 837.0 kB/s eta 0:00:00
+#23 149.8 Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+#23 149.9    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 92.9/92.9 kB 757.7 kB/s eta 0:00:00
+#23 150.0 Downloading reactivex-6.1.1-py3-none-any.whl (261 kB)
+#23 150.4    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 261.0/261.0 kB 713.8 kB/s eta 0:00:00
+#23 150.6 Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+#23 150.8    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 667.2 kB/s eta 0:00:00
+#23 150.9 Downloading coloredlogs-15.0.1-py2.py3-none-any.whl (46 kB)
+#23 151.0    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.0/46.0 kB 3.9 MB/s eta 0:00:00
+#23 151.0 Downloading flatbuffers-25.12.19-py2.py3-none-any.whl (26 kB)
+#23 151.2 Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_aarch64.whl (344 kB)
+#23 152.0    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 344.2/344.2 kB 410.9 kB/s eta 0:00:00
+#23 152.1 Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+#23 ...
+
+#25 [analytics 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#25 164.8    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 33.1/33.1 MB 614.2 kB/s eta 0:00:00
+#25 165.1 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#25 165.3    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 152.3 kB/s eta 0:00:00
+#25 165.4 Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+#25 166.8    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 348.2/348.2 kB 269.2 kB/s eta 0:00:00
+#25 167.0 Installing collected packages: urllib3, tzdata, typing-extensions, numpy, narwhals, certifi, scipy, reactivex, python-dateutil, lightgbm, influxdb-client
+#25 169.8 Successfully installed certifi-2026.10.23 influxdb-client-1.50.0 lightgbm-4.7.0 narwhals-2.29.0 numpy-2.2.6 python-dateutil-4.0.0 reactivex-6.1.1 scipy-1.17.1 typing-extensions-4.16.0 tzdata-2026.6 urllib3-2.8.0
+#25 169.8 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#25 170.8 
+#25 170.8 [notice] A new release of pip is available: 24.0 -> 26.3
+#25 170.8 [notice] To update, run: pip install --upgrade pip
+#25 DONE 171.1s
+
+#34 [analytics 6/6] COPY features.py rules.py app.py ./
+#34 DONE 0.0s
+
+#35 [analytics] exporting to image
+#35 exporting layers
+#35 exporting layers 3.3s done
+#35 exporting manifest sha256:b5b6c97f37318f00a4ff9eb830782fe8a4064d256320cc3adec80157f6db3916 done
+#35 exporting config sha256:e0f3fd6a22a6d61722c52c56aff1ad379797aa75fcd6a24a7841c3feb00cb1d8 done
+#35 exporting attestation manifest sha256:a69c545d104bdd6bcff5ecab732b72842151d48d8b0e885f8d98a599c32c0755 done
+#35 exporting manifest list sha256:48957e3abcda6178867cb18bd32a4c1e1a66f3c4aebbd2648ebcc09dd94c69e2 done
+#35 naming to docker.io/library/cleanclone-analytics:latest done
+#35 unpacking to docker.io/library/cleanclone-analytics:latest
+#35 unpacking to docker.io/library/cleanclone-analytics:latest 0.8s done
+#35 DONE 4.2s
+
+#36 [analytics] resolving provenance for metadata file
+#36 DONE 0.0s
+
+#23 [vision 5/6] RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r requirements.txt
+#23 166.0    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 453.0 kB/s eta 0:00:00
+#23 166.2 Downloading humanfriendly-10.0-py2.py3-none-any.whl (86 kB)
+#23 166.5    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.8/86.8 kB 247.8 kB/s eta 0:00:00
+#23 167.4 Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+#23 169.6    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 255.8 kB/s eta 0:00:00
+#23 170.3 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#23 170.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 142.4 kB/s eta 0:00:00
+#23 171.0 Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+#23 172.0    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 348.2/348.2 kB 414.6 kB/s eta 0:00:00
+#23 172.1 Installing collected packages: mpmath, flatbuffers, urllib3, tzdata, typing-extensions, sympy, protobuf, pillow, numpy, humanfriendly, certifi, reactivex, python-dateutil, coloredlogs, onnxruntime, influxdb-client
+#23 176.2 Successfully installed certifi-2026.10.23 coloredlogs-15.0.1 flatbuffers-25.12.19 humanfriendly-10.0 influxdb-client-1.50.0 mpmath-1.3.0 numpy-2.2.6 onnxruntime-1.22.1 pillow-11.3.0 protobuf-7.36.2 python-dateutil-4.0.0 reactivex-6.1.1 sympy-1.14.0 typing-extensions-4.16.0 tzdata-2026.6 urllib3-2.8.0
+#23 176.2 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#23 176.7 
+#23 176.7 [notice] A new release of pip is available: 24.0 -> 26.3
+#23 176.7 [notice] To update, run: pip install --upgrade pip
+#23 DONE 177.1s
+
+#37 [vision 6/6] COPY camera.py app.py ./
+#37 DONE 0.0s
+
+#38 [vision] exporting to image
+#38 exporting layers 3.3s done
+#38 exporting manifest sha256:504928fa88a8e1257e82c1ab233a8d16843e0f0b74ca8a3266791c1b204bba56 done
+#38 exporting config sha256:193b94863f26c24b24c7b61fdd91764888c986fcf712b9ed1cd881624aec683d done
+#38 exporting attestation manifest sha256:2cfb97a1d0597e798e3865e271d5570c9f3ed8d0db15f575c449f00ffc4bf3cb done
+#38 exporting manifest list sha256:39b0ae444a6060cc1913b649c9e30e2b707b646c9d156b49ddeb65145105a79d done
+#38 naming to docker.io/library/cleanclone-vision:latest done
+#38 unpacking to docker.io/library/cleanclone-vision:latest
+#38 unpacking to docker.io/library/cleanclone-vision:latest 0.8s done
+#38 DONE 4.1s
+
+#39 [vision] resolving provenance for metadata file
+#39 DONE 0.0s
+waiting for Ollama to finish downloading models (up to 25 min) ...
+waiting 100 s for data to flow ...
+PASS bearing_features: 180 points
+PASS predictions: 88 points
+PASS vision_inspection: 35 points
+PASS agent_decisions: 5 points
+agent decision modes:
+   5 [llm
+   7 [rules
+PASS logs/actions.log written
+ALL CHECKS PASSED

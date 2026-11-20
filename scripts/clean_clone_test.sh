@@ -9,6 +9,8 @@
 #
 # First run downloads ~3 GB of Qwen models: allow 10-20 minutes.
 set -u
+# Plain progress output: compose's fancy progress bars fail when output is piped (e.g. into tee)
+export COMPOSE_PROGRESS=plain BUILDKIT_PROGRESS=plain
 REPO="$(git rev-parse --show-toplevel)"
 DIR="$(mktemp -d)/edge-clone"
 P=cleanclone

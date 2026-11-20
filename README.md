@@ -46,7 +46,7 @@ python scripts/check_pipeline.py     # latest data, predictions, vision, agent d
 cat logs/alerts.log logs/tickets.log
 docker compose logs -f agent         # e.g. "confirmed_fault -> send_alert,create_maintenance_ticket [llm, 5.0s]"
 ```
-One scenario loop takes about 6.5 minutes.
+One scenario loop takes about 6.5 minutes. A step-by-step demo is in [docs/DEMO.md](docs/DEMO.md).
 
 ## Results
 Numbers come from `analytics/models/metrics.json`, `vision/models/metrics.json` and the logs of a full run.
@@ -60,6 +60,7 @@ Numbers come from `analytics/models/metrics.json`, `vision/models/metrics.json` 
 | Thermal vision | leave one load out (no, medium, full load), 488 images | 488 of 488 correct with the camera text overlay blanked |
 | Agent, Qwen3 4B | 9 probe calls on the real prompt | 9 of 9 valid, 1.6 to 4 s; live decisions 2 to 12 s on CPU |
 | Whole stack | Docker memory use while running | about 4.6 GB of 7.75 GB |
+| Clean start | fresh clone, no `.env`, no Docker cache (`docs/results/clean_clone_nocache.txt`) | all four InfluxDB measurements filled within 100 s of the models being ready |
 
 The scenario run produces the expected sequence of decisions: no action when healthy, a warning with a medium ticket for a 7 mil inner fault, and critical alerts with high tickets for 14 and 21 mil faults and for outer and ball faults.
 
@@ -86,7 +87,9 @@ VISION_MASK_TOP=0.15 python vision/train.py
 ```
 Raw datasets are not in the repository. Trained models, the processed feature table and a small demo image set are, so a clean clone runs without them.
 
-Datasets: Case Western Reserve University Bearing Data Center; Mendeley Data thermal images of induction motors with healthy and corroded bearings. <add exact citations>
+## Datasets
+- **Vibration:** Case Western Reserve University Bearing Data Center, seeded-fault bearing test data. https://engineering.case.edu/bearingdatacenter/download-data-file
+- **Thermal images:** Kulkarni, V. V., Kundu, M., Simha, J. B. *Induction Motor-Thermal Images*, Mendeley Data, Version 2, 2026. DOI 10.17632/pymtdhfzbj.2, https://data.mendeley.com/datasets/pymtdhfzbj/2 (licence CC BY 4.0).
 
 ## Repository layout
 ```
@@ -97,6 +100,7 @@ simulator/   Modbus TCP replay server and scenario.yaml
 telegraf/    telegraf.conf (the only file to change for a real device)
 ollama/      entrypoint that pulls the models on first start
 scripts/     data preparation, pipeline check, LLM probe, clean-clone test
+docs/        DEMO.md (demo script) and results/ (evaluation and test outputs)
 logs/        alerts.log, tickets.log, actions.log (written at runtime)
 ```
 
