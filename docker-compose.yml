@@ -2,7 +2,7 @@ name: edge-predictive-maintenance
 
 services:
   influxdb:
-    image: influxdb:2
+    image: influxdb:2.9.1
     restart: unless-stopped
     ports:
       - "127.0.0.1:8086:8086"      # localhost only: dev credentials, no TLS
@@ -46,7 +46,7 @@ services:
       start_period: 5s
 
   telegraf:
-    image: telegraf
+    image: telegraf:1.40.3
     restart: unless-stopped
     depends_on:
       influxdb:
@@ -110,7 +110,7 @@ services:
       - ./shared:/shared:ro
 
   ollama:
-    image: ollama/ollama
+    image: ollama/ollama:0.40.16
     restart: unless-stopped
     entrypoint: ["/bin/sh", "/entrypoint.sh"]
     ports:
