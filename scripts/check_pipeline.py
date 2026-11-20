@@ -1,4 +1,5 @@
-"""Milestone A check: prints the latest points that reached InfluxDB next to the simulator's true state.
+"""Pipeline check: prints the latest points that reached InfluxDB (features, predictions, vision, agent
+decisions) and the logs, next to the simulator's true state.
 
 Run from the repo root with the .venv active, while `docker compose up` is running:
     python scripts/check_pipeline.py

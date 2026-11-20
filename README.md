@@ -37,7 +37,6 @@ flowchart LR
 - The LLM answers in a JSON schema, so the output is always a valid function call.
 - A rule policy defines what must happen. The model chooses the functions and words the alert, but it cannot skip a required alert, change its severity or a ticket's priority, rewrite the ticket's action or time window, or raise an alarm the sensors do not support. A message that contains a number or fault type the sensors did not report is replaced by the rule-table text.
 - If a sensor stops (or never starts), the agent raises a stale-data alert and repeats it every `REMINDER_S` seconds until data returns. A fault reading with low confidence is treated as a transition for `LOW_CONF_HOLD_S` seconds and acted on if it persists.
-- Any alert text with a number, fault type or urgency that is not in the sensor report is replaced by a templated sentence.
 - If the model is slow, down or invalid, the agent falls back to the 0.6B model and then to the rule policy. Stale sensor data raises its own warning.
 - The agent only calls the model when the situation changes, plus a reminder every 2 minutes during a fault.
 
