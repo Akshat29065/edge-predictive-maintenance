@@ -50,18 +50,24 @@ class Agent:
         return calls, mode, notes, error, latency
 
 
-def read_situation(client, bucket, org, stale_s):
+def read_situation(client, bucket, org, stale_s, grace_over=True):
+    """Latest analytics + vision state. Looks back an hour (tail keeps it cheap) so that a service that has
+    stopped shows up as STALE, not as missing data: with a short window its last row ages out and the agent
+    would go silent exactly when the outage matters. `grace_over` is False during start-up, when missing
+    data is still expected."""
     now = time.time()
     pred_q = f'''
-from(bucket: "{bucket}") |> range(start: -5m)
+from(bucket: "{bucket}") |> range(start: -1h)
   |> filter(fn: (r) => r._measurement == "predictions")
   |> filter(fn: (r) => contains(value: r._field, set: ["condition","confidence","severity_mil","anomaly_score","anomaly","urgency","action","window"]))
+  |> tail(n: 5)
   |> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")
   |> sort(columns: ["_time"], desc: true) |> limit(n: 5)'''
     vis_q = f'''
-from(bucket: "{bucket}") |> range(start: -5m)
+from(bucket: "{bucket}") |> range(start: -1h)
   |> filter(fn: (r) => r._measurement == "vision_inspection")
   |> filter(fn: (r) => r._field == "label" or r._field == "p_faulty")
+  |> tail(n: 8)
   |> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")
   |> sort(columns: ["_time"], desc: true) |> limit(n: 8)'''
     api = client.query_api()
@@ -84,7 +90,7 @@ from(bucket: "{bucket}") |> range(start: -5m)
         age = now - vis[0].get_time().timestamp()
         sit["vision"] = {"label": label, "p_faulty": round(sum(float(r.values["p_faulty"]) for r in vis) / len(vis), 2),
                          "frames": len(vis), "stale": age > stale_s}
-    sit["agreement"] = policy.classify(sit)
+    sit["agreement"] = policy.classify(sit, grace_over)
     return sit
 
 
@@ -108,12 +114,14 @@ def main():
     llm = OllamaClient(env("OLLAMA_URL", "http://ollama:11434"), system, float(env("LLM_TIMEOUT_S", "30")), env("LLM_MODE", "json"))
     agent = Agent(llm, [env("LLM_MODEL", "qwen3:4b"), env("LLM_FALLBACK_MODEL", "")],
                   Executor(env("LOG_DIR", "/logs")))
+    startup_grace = float(env("STARTUP_GRACE_S", "120"))
+    started = time.time()
     last_key, last_act = None, 0.0
     with InfluxDBClient(url=url, token=token, org=org) as client:
         write = client.write_api(write_options=SYNCHRONOUS)
         while True:
             try:
-                sit = read_situation(client, bucket, org, stale_s)
+                sit = read_situation(client, bucket, org, stale_s, time.time() - started >= startup_grace)
                 a = sit["analytics"]
                 waiting = sit["agreement"] == "unknown"
                 transition = a is not None and not a["stale"] and a["confidence"] < min_conf

@@ -5,7 +5,7 @@ services:
     image: influxdb:2
     restart: unless-stopped
     ports:
-      - "8086:8086"
+      - "127.0.0.1:8086:8086"      # localhost only: dev credentials, no TLS
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_ADMIN_USER:-admin}
@@ -27,7 +27,7 @@ services:
     build: ./simulator
     restart: unless-stopped
     ports:
-      - "${MODBUS_PORT:-5020}:${MODBUS_PORT:-5020}"
+      - "127.0.0.1:${MODBUS_PORT:-5020}:${MODBUS_PORT:-5020}"      # localhost only: Modbus has no authentication
     environment:
       MODBUS_PORT: ${MODBUS_PORT:-5020}
       REPLAY_INTERVAL_S: ${REPLAY_INTERVAL_S:-1}
@@ -113,7 +113,7 @@ services:
     restart: unless-stopped
     entrypoint: ["/bin/sh", "/entrypoint.sh"]
     ports:
-      - "11434:11434"
+      - "127.0.0.1:11434:11434"      # localhost only: the Ollama API has no authentication
     environment:
       LLM_MODEL: ${LLM_MODEL:-qwen3:4b}
       LLM_FALLBACK_MODEL: ${LLM_FALLBACK_MODEL:-qwen3:0.6b}
@@ -153,6 +153,7 @@ services:
       LLM_MODE: ${LLM_MODE:-json}
       AGENT_INTERVAL_S: ${AGENT_INTERVAL_S:-10}
       REMINDER_S: ${REMINDER_S:-120}
+      STARTUP_GRACE_S: ${STARTUP_GRACE_S:-120}
       LOG_DIR: /logs
       TZ: ${TZ:-UTC}
     volumes:

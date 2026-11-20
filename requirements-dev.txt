@@ -15,7 +15,4 @@ torchvision
 onnx
 onnxruntime
 matplotlib
-pytesttorch
-torchvision
-onnx
-onnxruntime
+pytest

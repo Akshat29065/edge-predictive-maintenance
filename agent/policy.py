@@ -11,13 +11,15 @@ FAULT_NAMES = {"inner": "inner-race", "outer": "outer-race", "ball": "rolling-el
 URGENCY_TO_SEVERITY = {"none": "info", "low": "info", "medium": "warning", "high": "critical"}
 
 
-def classify(sit):
-    """healthy | confirmed_fault | conflict | stale | unknown"""
+def classify(sit, grace_over=True):
+    """healthy | confirmed_fault | conflict | stale | unknown
+
+    Missing or old data means `stale` (operators must hear about a dead sensor). During the start-up
+    grace period (`grace_over` False) it is `unknown` instead: rows left in InfluxDB from a previous run
+    are old, and the services are still warming up, so an alert would only be noise."""
     a, v = sit.get("analytics"), sit.get("vision")
-    if (a and a["stale"]) or (v and v["stale"]):
-        return "stale"
-    if not a or not v:
-        return "unknown"
+    if not a or not v or a["stale"] or v["stale"]:
+        return "stale" if grace_over else "unknown"
     a_fault, v_fault = a["condition"] != "normal", v["label"] == "faulty"
     if a_fault and v_fault:
         return "confirmed_fault"

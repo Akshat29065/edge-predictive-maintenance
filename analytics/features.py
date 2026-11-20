@@ -2,8 +2,9 @@
 import numpy as np
 
 FEATURES = ["rms", "peak", "p2p", "crest", "kurtosis", "skew", "shape", "centroid"]
-# skew can be negative, so it is not log-transformed for the anomaly model
-LOG_FEATURES = ["rms", "peak", "p2p", "crest", "kurtosis", "shape", "centroid"]
+# skew and kurtosis can be <= 0 (kurtosis is the Fisher/excess kind: ~0 for healthy noise), so neither is
+# log-transformed. Logging a value <= 0 clipped it to log(1e-9) and corrupted the anomaly baseline.
+LOG_FEATURES = ["rms", "peak", "p2p", "crest", "shape", "centroid"]
 
 
 def anomaly_vector(row):

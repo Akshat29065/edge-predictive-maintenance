@@ -56,7 +56,7 @@ Numbers come from `analytics/models/metrics.json`, `vision/models/metrics.json` 
 | Fault classifier (CWRU, 4 classes) | train on one motor load, test on the other, smoothed | macro F1 0.962 (0 to 3 hp) and 0.999 (3 to 0 hp) |
 | Fault size (7, 14, 21 mil) | same split | macro F1 0.973 and 0.868 |
 | Healthy vs faulty | same split | recall 1.00 for both |
-| Anomaly score | healthy baseline, time-ordered split | 14.8 % false alarms on held-out healthy data, 100 % of faults flagged |
+| Anomaly score | healthy baseline, time-ordered split | 16.7 % false alarms on held-out healthy data, 100 % of faults flagged |
 | Thermal vision | leave one load out (no, medium, full load), 488 images | 488 of 488 correct with the camera text overlay blanked |
 | Agent, Qwen3 4B | 9 probe calls on the real prompt | 9 of 9 valid, 1.6 to 4 s; live decisions 2 to 12 s on CPU |
 | Whole stack | Docker memory use while running | about 4.6 GB of 7.75 GB |
@@ -107,5 +107,5 @@ logs/        alerts.log, tickets.log, actions.log (written at runtime)
 ## Troubleshooting
 - `docker compose ps` should show 7 services. `ollama` becomes healthy after the models are downloaded.
 - Agent log says `mode=rules`: the LLM is still downloading or unavailable. Check `docker compose logs ollama`.
-- Ports in use (8086, 5020, 11434): stop the other service or change the port mapping.
+- Ports in use (8086, 5020, 11434): stop the other service or change the port mapping. All three are published on `127.0.0.1` only, so other machines on your network cannot reach the database, the Modbus server or Ollama.
 - `python scripts/probe_llm.py qwen3:4b --mode json` measures how reliably a model makes valid calls.
